@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - Next-Gen Glassmorphic ATM Simulator</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=3.6.3">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-symbol">◇</span>
+                <span class="logo-text">NEXUS <span>BANK</span></span>
+            </div>
+            <div class="header-status">
+                <span class="status-indicator online"></span>
+                <span class="status-label">ATM Terminal #0981 - Online</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Left Side: ATM Physical Machine -->
+            <section class="atm-cabinet-container">
+                <div class="atm-cabinet">
+                    
+                    <!-- 1. Digital Screen -->
+                    <div class="screen-bezel">
+                        <div class="bezel-screw top-left"></div>
+                        <div class="bezel-screw top-right"></div>
+                        <div class="bezel-screw bottom-left"></div>
+                        <div class="bezel-screw bottom-right"></div>
+                        <div class="bezel-label">NEXUS TERMINAL S-500</div>
+                        <div class="atm-screen" id="atmScreen">
+                            <div class="screen-glare"></div>
+                            <div class="screen-laser-beam"></div>
+                            <div class="screen-hud-deco"></div>
+                            <div class="screen-telemetry-header">
+                                <span class="telemetry-item">NET: SECURE</span>
+                                <span class="telemetry-item">LINK: 256-BIT</span>
+                            </div>
+                            <div class="screen-telemetry-footer">
+                                <span class="telemetry-item">SYS: ACTIVE</span>
+                                <span class="telemetry-item">LOAD: 4.8%</span>
+                            </div>
+                            
+                            <!-- SCREEN: Welcome / Insert Card -->
+                            <div class="screen-view active" id="viewWelcome">
+                                <div class="welcome-content">
+                                    <div class="card-3d-wrapper">
+                                        <div class="card-3d">
+                                            <div class="card-3d-front">
+                                                <div class="card-3d-chip"></div>
+                                                <div class="card-3d-logo">◇</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h1>Welcome to Nexus Bank</h1>
+                                    <p class="subtitle">Please insert your ATM card to begin</p>
+                                    <div class="card-prompt-hint">
+                                        <span class="hint-arrow">↓</span> Select a mock card from the right panel to insert <span class="hint-arrow">↓</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: PIN Input -->
+                            <div class="screen-view" id="viewPin">
+                                <div class="pin-content">
+                                    <div class="biometric-scanner-box">
+                                        <div class="scanner-bracket-tl"></div>
+                                        <div class="scanner-bracket-tr"></div>
+                                        <div class="scanner-bracket-bl"></div>
+                                        <div class="scanner-bracket-br"></div>
+                                        <div class="scanner-face-icon">👤</div>
+                                        <div class="scanner-laser"></div>
+                                    </div>
+                                    <h2 class="screen-title">Security Verification</h2>
+                                    <p id="pinGreeting">Welcome, User</p>
+                                    <p class="instruction">Enter your 4-digit security PIN</p>
+                                    
+                                    <div class="pin-display">
+                                        <div class="pin-dot" id="dot-0"></div>
+                                        <div class="pin-dot" id="dot-1"></div>
+                                        <div class="pin-dot" id="dot-2"></div>
+                                        <div class="pin-dot" id="dot-3"></div>
+                                    </div>
+
+                                    <div class="error-text" id="pinError"></div>
+
+                                    <p class="security-note">
+                                        🛡️ Keep your PIN secure. Use keypad to input, click ENTER to verify.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Main Menu -->
+                            <div class="screen-view" id="viewMenu">
+                                <div class="menu-content">
+                                    <div class="menu-header">
+                                        <div class="user-greeting">Hello, <span id="userName">Alice</span></div>
+                                        <div class="card-ref-number">Acc: <span id="userAccNo">ACC-XXXX</span></div>
+                                    </div>
+                                    
+                                    <div class="menu-grid">
+                                        <button class="menu-btn" data-action="go-balance">
+                                            <span class="btn-icon">💰</span>
+                                            <span class="btn-text">Balance Inquiry</span>
+                                        </button>
+                                        <button class="menu-btn" data-action="go-withdraw">
+                                            <span class="btn-icon">💸</span>
+                                            <span class="btn-text">Withdraw Cash</span>
+                                        </button>
+                                        <button class="menu-btn" data-action="go-deposit">
+                                            <span class="btn-icon">📥</span>
+                                            <span class="btn-text">Deposit Cash</span>
+                                        </button>
+                                        <button class="menu-btn" data-action="go-history">
+                                            <span class="btn-icon">📋</span>
+                                            <span class="btn-text">Transaction History</span>
+                                        </button>
+                                        <button class="menu-btn" data-action="go-pinchange">
+                                            <span class="btn-icon">🔐</span>
+                                            <span class="btn-text">Change PIN</span>
+                                        </button>
+                                        <button class="menu-btn danger" data-action="eject">
+                                            <span class="btn-icon">🚪</span>
+                                            <span class="btn-text">Exit & Eject Card</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Balance Inquiry -->
+                            <div class="screen-view" id="viewBalance">
+                                <div class="balance-content">
+                                    <h2 class="screen-title">Account Balance</h2>
+                                    <div class="balance-card">
+                                        <p class="balance-label">AVAILABLE BALANCE</p>
+                                        <h3 class="balance-amount" id="balanceText">$0.00</h3>
+                                    </div>
+                                    <div class="balance-meta">
+                                        <p>Account: <span id="balanceAcc">ACC-XXXX</span></p>
+                                        <p>Status: <span class="active-badge">Active</span></p>
+                                    </div>
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" data-action="menu">Back to Menu</button>
+                                        <button class="control-btn-primary" data-action="print-balance">Print Receipt</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Withdraw Options -->
+                            <div class="screen-view" id="viewWithdraw">
+                                <div class="withdraw-content">
+                                    <h2 class="screen-title">Select Withdrawal Amount</h2>
+                                    <p class="instruction">Choose standard cash denomination below</p>
+                                    
+                                    <div class="quick-cash-grid">
+                                        <button class="cash-btn" data-amount="20">$20</button>
+                                        <button class="cash-btn" data-amount="50">$50</button>
+                                        <button class="cash-btn" data-amount="100">$100</button>
+                                        <button class="cash-btn" data-amount="200">$200</button>
+                                        <button class="cash-btn" data-amount="500">$500</button>
+                                        <button class="cash-btn" data-amount="other">Other Amount</button>
+                                    </div>
+
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" data-action="menu">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Custom Amount -->
+                            <div class="screen-view" id="viewCustomAmount">
+                                <div class="custom-amount-content">
+                                    <h2 class="screen-title">Enter Custom Amount</h2>
+                                    <p class="instruction">Must be a multiple of $10. Max: $1,000</p>
+                                    
+                                    <div class="amount-input-box">
+                                        <span class="currency-symbol">$</span>
+                                        <span class="amount-val" id="customAmountText">0</span>
+                                        <span class="cursor-blink">|</span>
+                                    </div>
+
+                                    <div class="error-text" id="withdrawError"></div>
+
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" data-action="go-withdraw">Back</button>
+                                        <button class="control-btn-primary" data-action="confirm-withdraw">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Deposit Entry -->
+                            <div class="screen-view" id="viewDeposit">
+                                <div class="deposit-content">
+                                    <h2 class="screen-title">Deposit Cash</h2>
+                                    <p class="instruction">Choose bills to insert into the cash slot</p>
+                                    
+                                    <div class="deposit-bill-selectors">
+                                        <div class="bill-selector-row">
+                                            <span class="bill-badge">$100</span>
+                                            <button class="bill-count-btn minus" data-denom="100">-</button>
+                                            <span class="bill-count-val" id="count-100">0</span>
+                                            <button class="bill-count-btn plus" data-denom="100">+</button>
+                                        </div>
+                                        <div class="bill-selector-row">
+                                            <span class="bill-badge">$50</span>
+                                            <button class="bill-count-btn minus" data-denom="50">-</button>
+                                            <span class="bill-count-val" id="count-50">0</span>
+                                            <button class="bill-count-btn plus" data-denom="50">+</button>
+                                        </div>
+                                        <div class="bill-selector-row">
+                                            <span class="bill-badge">$20</span>
+                                            <button class="bill-count-btn minus" data-denom="20">-</button>
+                                            <span class="bill-count-val" id="count-20">0</span>
+                                            <button class="bill-count-btn plus" data-denom="20">+</button>
+                                        </div>
+                                        <div class="bill-selector-row">
+                                            <span class="bill-badge">$10</span>
+                                            <button class="bill-count-btn minus" data-denom="10">-</button>
+                                            <span class="bill-count-val" id="count-10">0</span>
+                                            <button class="bill-count-btn plus" data-denom="10">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="amount-input-box" style="margin-top: 6px; padding: 8px 24px;">
+                                        <span class="currency-symbol" style="font-size: 24px;">$</span>
+                                        <span class="amount-val" id="depositAmountText" style="font-size: 26px;">0</span>
+                                    </div>
+
+                                    <div class="error-text" id="depositError" style="margin-bottom: 8px; height: 16px;"></div>
+
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" data-action="menu">Cancel</button>
+                                        <button class="control-btn-primary" data-action="confirm-deposit">Insert Bills</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: PIN Change -->
+                            <div class="screen-view" id="viewPinChange">
+                                <div class="pinchange-content">
+                                    <h2 class="screen-title">Change security PIN</h2>
+                                    
+                                    <div class="pinchange-form">
+                                        <div class="form-group" id="groupOldPin">
+                                            <label>Current 4-digit PIN</label>
+                                            <div class="fake-input" id="oldPinFake">Enter PIN</div>
+                                        </div>
+                                        <div class="form-group disabled" id="groupNewPin">
+                                            <label>New 4-digit PIN</label>
+                                            <div class="fake-input" id="newPinFake">Enter PIN</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="error-text" id="pinChangeError"></div>
+
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" id="btnBackPinChange">Cancel</button>
+                                        <button class="control-btn-primary" id="btnNextPinChange">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Loading / Processing -->
+                            <div class="screen-view" id="viewProcessing">
+                                <div class="processing-content">
+                                    <div class="spinner-container">
+                                        <div class="dual-ring"></div>
+                                    </div>
+                                    <h2>Processing...</h2>
+                                    <p class="subtitle">Please wait while we verify your transaction</p>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Transaction History -->
+                            <div class="screen-view" id="viewHistory">
+                                <div class="history-content">
+                                    <h2 class="screen-title">Recent Transactions</h2>
+                                    <div class="history-table-container">
+                                        <table class="history-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Amount</th>
+                                                    <th>Date/Time</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="historyTableBody">
+                                                <!-- Row entries injected by Javascript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="screen-actions">
+                                        <button class="control-btn-secondary" data-action="menu">Back to Menu</button>
+                                        <button class="control-btn-primary" data-action="print-statement">Print Statement</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCREEN: Status View (Success/Failure) -->
+                            <div class="screen-view" id="viewStatus">
+                                <div class="status-content">
+                                    <div class="status-icon success" id="statusSuccessIcon">✓</div>
+                                    <div class="status-icon failure" id="statusFailureIcon">✗</div>
+                                    <h2 id="statusTitle">Success</h2>
+                                    <p id="statusMsg">Your transaction has been approved.</p>
+                                    
+                                    <div id="dispenseTip" class="dispense-tip">
+                                        💵 Take your money from the slot below!
+                                    </div>
+
+                                    <div class="screen-actions">
+                                        <button class="control-btn-primary" id="statusOkBtn">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 2. Physical Interface Slots -->
+                    <div class="hardware-panel">
+                        <!-- Top Row: Card Reader Slot & Receipt Printer -->
+                        <div class="hardware-row">
+                            <!-- Card Slot -->
+                            <div class="hardware-module flex-col">
+                                <div class="module-label">CARD READER</div>
+                                <div class="card-slot-bezel" id="cardSlotBezel">
+                                    <div class="card-slot-led" id="cardLed"></div>
+                                    <div class="card-slot-opening">
+                                        <div class="inserted-card" id="insertedCard"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Receipt Printer -->
+                            <div class="hardware-module flex-col">
+                                <div class="module-label">RECEIPT PRINTER</div>
+                                <div class="receipt-printer-slot">
+                                    <div class="printer-opening"></div>
+                                    <div class="dispensed-receipt" id="dispensedReceipt">
+                                        <div class="receipt-paper" id="receiptContent">
+                                            <!-- Styled thermal receipt text injected by Javascript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Keypad Deck & Cash Dispenser -->
+                        <div class="hardware-row align-start">
+                            <!-- Tactile Keypad -->
+                            <div class="hardware-module flex-col width-55">
+                                <div class="module-label">SECURITY KEYPAD</div>
+                                <div class="tactile-keypad">
+                                    <button class="key-btn" data-key="1">1</button>
+                                    <button class="key-btn" data-key="2">2</button>
+                                    <button class="key-btn" data-key="3">3</button>
+                                    
+                                    <button class="key-btn" data-key="4">4</button>
+                                    <button class="key-btn" data-key="5">5</button>
+                                    <button class="key-btn" data-key="6">6</button>
+                                    
+                                    <button class="key-btn" data-key="7">7</button>
+                                    <button class="key-btn" data-key="8">8</button>
+                                    <button class="key-btn" data-key="9">9</button>
+                                    
+                                    <button class="key-btn cmd-btn cancel" data-key="cancel">CANCEL</button>
+                                    <button class="key-btn" data-key="0">0</button>
+                                    <button class="key-btn cmd-btn clear" data-key="clear">CLEAR</button>
+                                    
+                                    <button class="key-btn cmd-btn enter" data-key="enter">ENTER</button>
+                                </div>
+                            </div>
+
+                            <!-- Cash Dispenser Slot -->
+                            <div class="hardware-module flex-col width-40">
+                                <div class="module-label">CASH DISPENSER</div>
+                                <div class="cash-dispenser" id="cashDispenser">
+                                    <div class="dispenser-opening"></div>
+                                    <div class="dispenser-glow-light" id="cashGlow"></div>
+                                    <!-- Dispensed bill items stack -->
+                                    <div class="dispensed-cash-stack" id="cashStack">
+                                        <!-- Stack of bills injected here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Right Side: Developer Console & Test Suite -->
+            <section class="dev-panel-container">
+                <!-- Developer Guide / Card Bank -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3>📁 Card Selector Bank</h3>
+                        <span class="badge">Click card to Insert</span>
+                    </div>
+                    <p class="panel-desc">Simulate card insertion by clicking one of the pre-seeded cards below:</p>
+                    
+                    <div class="cards-list" id="cardBank">
+                        <!-- Cards are populated by JS -->
+                    </div>
+                </div>
+
+                <!-- ATM Status / Analytics -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3>⚙️ ATM Status Console</h3>
+                    </div>
+                    <div class="status-grid">
+                        <div class="status-stat">
+                            <span class="stat-label">Vault Cash</span>
+                            <span class="stat-value" id="vaultCashText">$0.00</span>
+                        </div>
+                        <div class="status-stat">
+                            <span class="stat-label">Transactions</span>
+                            <span class="stat-value" id="statTxCount">0</span>
+                        </div>
+                        <div class="status-stat">
+                            <span class="stat-label">Active Users</span>
+                            <span class="stat-value" id="statUsersCount">0</span>
+                        </div>
+                        <div class="status-stat">
+                            <span class="stat-label">Locked Cards</span>
+                            <span class="stat-value text-danger" id="statLockedCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Logs / Database Inspection -->
+                <div class="glass-panel flex-grow">
+                    <div class="panel-header">
+                        <h3>💻 Live Transaction Ledger</h3>
+                        <button class="refresh-logs-btn" id="refreshLogsBtn">↻ Refresh</button>
+                    </div>
+                    <div class="logs-feed" id="logsFeed">
+                        <!-- Logs injected by script -->
+                    </div>
+                </div>
+
+                <!-- Create Mock Account Panel -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3>👤 Create Mock Account</h3>
+                    </div>
+                    <p class="panel-desc">Register a new mock card to test transactions:</p>
+                    <div class="admin-actions">
+                        <input type="text" id="newHolderName" placeholder="Cardholder Name (e.g. Dave Miller)" class="admin-input">
+                        <div class="admin-input-group">
+                            <input type="text" id="newCardNumber" placeholder="16-Digit Card No." maxlength="19" class="admin-input" style="font-family: var(--font-mono)">
+                            <input type="password" id="newPin" placeholder="PIN (4 digits)" maxlength="4" class="admin-input" style="font-family: var(--font-mono)">
+                        </div>
+                        <!-- CARD THEME CUSTOMIZATION CONTROLS -->
+                        <div class="theme-customize-box" style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; text-align: left;">
+                            <span class="panel-desc" style="display: block; font-weight: 600; margin-bottom: 6px; color: rgba(255,255,255,0.85); font-size: 10px;">🎨 Customize Debit Card Design:</span>
+                            <div class="admin-input-group" style="margin-bottom: 6px;">
+                                <div style="display: flex; align-items: center; gap: 8px; width: 50%;">
+                                    <label style="font-size: 8px; color: var(--text-muted); text-transform: uppercase;">Start Color</label>
+                                    <input type="color" id="themeColorStart" value="#1d4ed8" style="background:none; border:none; width: 24px; height: 24px; cursor: pointer; padding:0;">
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; width: 50%;">
+                                    <label style="font-size: 8px; color: var(--text-muted); text-transform: uppercase;">End Color</label>
+                                    <input type="color" id="themeColorEnd" value="#db2777" style="background:none; border:none; width: 24px; height: 24px; cursor: pointer; padding:0;">
+                                </div>
+                            </div>
+                            <div class="admin-input-group" style="margin-bottom: 6px; gap: 6px;">
+                                <select id="themePattern" class="admin-input" style="width: 50%; padding: 4px; font-size: 9px;">
+                                    <option value="none">No Pattern (Clean)</option>
+                                    <option value="grid">Cyber Grid</option>
+                                    <option value="scanlines">Retro Scanlines</option>
+                                    <option value="dots">Quantum Dots</option>
+                                </select>
+                                <select id="themeEmblem" class="admin-input" style="width: 50%; padding: 4px; font-size: 9px;">
+                                    <option value="◇">Bank Symbol (◇)</option>
+                                    <option value="◈">Quantum (◈)</option>
+                                    <option value="★">Star (★)</option>
+                                    <option value="⬢">Hexagon (⬢)</option>
+                                    <option value="🛡️">Shield (🛡️)</option>
+                                </select>
+                            </div>
+                            <input type="text" id="themeImageUrl" placeholder="Paste debit card image URL (optional)" class="admin-input" style="margin-bottom: 8px; font-size: 9px; padding: 6px;">
+                        </div>
+
+                        <div class="admin-input-group">
+                            <input type="number" id="newBalance" placeholder="Initial Balance ($)" min="0" class="admin-input">
+                            <button class="admin-btn" id="createUserBtn" style="background: var(--color-success); border-color: var(--color-success); color: var(--text-dark);">Create Card</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Action Console -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3>🔑 Admin Tools</h3>
+                    </div>
+                    <div class="admin-actions">
+                        <div class="admin-input-group">
+                            <input type="number" id="refillAmount" placeholder="Refill Cash amount ($)" min="1" step="100" class="admin-input">
+                            <button class="admin-btn" id="refillVaultBtn">Refill Vault</button>
+                        </div>
+                        <div class="admin-input-group">
+                            <select id="lockSelect" class="admin-input">
+                                <option value="">Select locked card...</option>
+                            </select>
+                            <button class="admin-btn" id="unlockCardBtn">Unlock</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script File -->
+    <script src="app.js?v=3.6.3"></script>
+</body>
+</html>
